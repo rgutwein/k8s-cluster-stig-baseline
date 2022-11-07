@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9084,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003270 V-242460",
+  "previousName": "",
+  "title": "The Kubernetes admin.conf must have file permissions set to 644 or more restrictive. (V-242460) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242460r712736_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n\tif [[ ! -f /etc/kubernetes/admin.conf || ! -f /etc/kubernetes/scheduler.conf || ! -f /etc/kubernetes/controller-manager.conf ]]\n\tthen\n\t\techo \"Configuration files are missing in /etc/kubernetes/. Check failed.\"\n\t\texit 1\n\tfi\n}\n\nmasterCheck ()\n{\n\tfileCheck\n        echo \"k8s Component - Kubernetes Master\"\n        permCheckAdminConf=$(stat -c %a /etc/kubernetes/admin.conf)\n        permCheckScheduleConf=$(stat -c %a /etc/kubernetes/scheduler.conf)\n        permCheckControllerManagerConf=$(stat -c %a /etc/kubernetes/controller-manager.conf)\n\n        if [[ $permCheckAdminConf -gt 644 || $permCheckScheduleConf -gt 644 || $permCheckControllerManagerConf -gt 644 ]]\n        then\n                echo \"Some Kubernetes configuration files within /etc/kubernetes/ have incorrect permissions. Check failed.\"\n                exit 1\n        else\n                echo \"All Kubernetes configuration files within /etc/kubernetes/ have correct permissions. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
