@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9062,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002600 V-242438",
+  "previousName": "",
+  "title": "Kubernetes API Server must configure timeouts to limit attack surface. (V-242438) (NIST 800-53: SC-5) (CCI: CCI-002385) (Rule ID: SV-242438r712670_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        timeoutConf=$(grep -i request-timeout manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $timeoutConf ]]\n        then\n                echo \"request-timeout is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        elif [[ $timeoutConf == '0' ]]\n        then\n                echo \"request-timeout is set to '0' in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"request-timeout is set correctly in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
