@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9078,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003210 V-242454",
+  "previousName": "",
+  "title": "The Kubernetes kubeadm must be owned by root. (V-242454) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242454r712718_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        if [[ ! -f /usr/bin/kubeadm ]]\n        then\n                echo \"kubeadm does not exist on target. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        permConf=$(stat -c %U:%G /usr/bin/kubeadm | grep -v root:root)\n\n        if [[ -n $permConf ]]\n        then\n                echo \"kubeadm has non-root owner. Check failed.\"\n                exit 1\n        else\n                echo \"kubeadm has proper ownership 'root'. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
