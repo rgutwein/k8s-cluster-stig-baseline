@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9024,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000470 V-242400",
+  "previousName": "",
+  "title": "The Kubernetes API server must have Alpha APIs disabled. (V-242400) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242400r712556_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        echo \"k8s Component - Kubernetes Master\"\n        alpConfManifest=$(grep -i feature-gates manifests_path* | grep -i AllAlpha=true)\n\n        if [[ -n $alpConfManifest ]]\n        then\n                echo \"Feature Gates - AllAlpha is set to 'true'. Check failed.\"\n                exit 1\n        else\n                echo \"Feature Gates - AllAlpha is not set or is set correctly. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
