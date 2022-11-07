@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9049,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001470 V-242425",
+  "previousName": "",
+  "title": "Kubernetes Kubelet must enable tls-cert-file for client authentication to secure service. (V-242425) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242425r712631_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls /etc/sysconfig/ | grep -w kubelet)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Kubelet config file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        tlsConf=$(grep -i tls-cert-file /etc/sysconfig/kubelet | cut -d '=' -f 2)\n\n        if [[ -z $tlsConf ]]\n        then\n                echo \"tls-cert-file is not set in Kubernetes Kubelet config file. Check failed.\"\n                exit 1\n        else\n                echo \"tls-cert-file is set in the Kubernetes Kubelet config file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
