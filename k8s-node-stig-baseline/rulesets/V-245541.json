@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9040,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001300 V-245541",
+  "previousName": "",
+  "title": "Kubernetes Kubelet must not disable timeouts. (V-245541) (NIST 800-53: SC-10) (CCI: CCI-001133) (Rule ID: SV-245541r821621_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls /etc/sysconfig/ | grep -w kubelet)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Kubelet configuration file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        timeoutConfKubelet=$(grep -i streaming-connection-idle-timeout /etc/sysconfig/kubelet | cut -d '=' -f 2)\n\n        if [[ -z $timeoutConfKubelet ]]\n        then\n                echo \"streaming-connection-idle-timeout is not set in the Kubelet config file. Check failed.\"\n                exit 1\n        elif [[ $timeoutConfKubelet == '0' ]]\n        then\n                echo \"streaming-connection-idle-timeout is set to '0'. Check failed.\"\n                exit 1\n        else\n                echo \"steaming-connection-idle-timeout is set correctly. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
