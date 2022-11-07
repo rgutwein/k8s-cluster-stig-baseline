@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9016,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000380 V-242392",
+  "previousName": "",
+  "title": "The Kubernetes kubelet must enable explicit authorization. (V-242392) (CCI: CCI-000213) (NIST 800-53: AC-3) (Rule ID: SV-242392r712532_rule)",
+  "script": "#!/bin/bash\n\nconfigFile=$(ls /etc/sysconfig/ | grep kubelet)\n\nif [[ -z $configFile ]]\nthen\n        echo \"Kubernetes Kubelet configuration file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\nfi\n\nauthConf=$(grep -i authorization-mode /etc/sysconfig/$configFile | cut -d '=' -f 2)\n\nif [[ -z $authConf ]]\nthen\n        echo \"The setting 'authorization-mode' is not configured in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nelif [[ ${authConf,,} == 'allowalways' ]]\nthen\n        echo \"The setting 'authorization-mode' is set to 'AllowAlways' in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'authorization-mode' is correctly set in the Kubernetes Kubelet configuration file. Check passed.\"\n        exit 0\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
