@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9025,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000600 V-242401",
+  "previousName": "",
+  "title": "The Kubernetes API Server must have an audit policy set. (V-242401) (NIST 800-53: AU-14(1)) (CCI: CCI-001464) (Rule ID: SV-242401r712559_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server manifest file was not found. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        audConfManifest=$(grep -i audit-policy-file manifests_path/$configFile)\n\n        if [[ -z $audConfManifest ]]\n        then\n                echo \"audit-policy-file is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"audit-policy-file is set in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
