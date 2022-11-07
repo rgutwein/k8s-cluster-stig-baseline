@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9007,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000290 V-242383",
+  "previousName": "",
+  "title": "User-managed resources must be created in dedicated namespaces. (V-242383) (NIST 800-53: CM-6)(CCI: CCI-000366) (Rule ID: SV-242383r712505_rule)",
+  "script": "#!/bin/bash\n\nnamespaces_arr=( $(kubectl get namespaces | awk '{print $1}') )\nnamespaces_arr=(\"${namespaces_arr[@]:1}\")\ndelete=kube-system\nnamespaces_arr=( \"${namespaces_arr[@]/$delete}\" )\n\nif [[ -z \"$namespaces_arr\" ]]\nthen\n    echo \"No namespaces were found on target. Check failed.\"\n    exit 1\nfi\n\nfor namespace in \"${namespaces_arr[@]}\"\ndo\n    if [ -z $namespace ]\n    then\n        continue\n    fi\n\n    kubectl config set-context --current --namespace=$namespace\n    namespace_columns_arr=( $(kubectl get all | awk '{print $1}') )\n    namespace_columns_arr=(\"${namespace_columns_arr[@]:1}\")\n\n    for name in \"${namespace_columns_arr[@]}\"\n    do\n        if [ $(echo $name | grep -c service/kubernetes) -eq 0 ]\n        then\n            echo \"Command kubectl get all for $namespace shows value for NAME is not service/kubernetes. Check failed.\"\n            exit 1\n        fi\n    done\ndone\n\necho \"All Namespaces on Target have service/kubernetes set for all NAME values. Check passed.\"\nexit 0",
+  "severity": "high",
+  "owner": "admin"
+}
+]
