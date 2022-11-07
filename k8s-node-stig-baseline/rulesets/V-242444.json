@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9068,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003110 V-242444",
+  "previousName": "",
+  "title": "The Kubernetes component manifests must be owned by root. (V-242444) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242444r712688_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        echo \"k8s Component - Kubernetes Master\"\n        fileCheck=$(stat -c %U:%G manifests_path* | grep -v root:root)\n\n        if [[ -z $fileCheck ]]\n        then\n                echo \"All files within manifests_path are owned by root. Check passed.\"\n                exit 0\n        else\n                echo \"Some files within manifests_path are owned by non-root users. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
