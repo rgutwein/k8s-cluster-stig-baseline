@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9091,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003340 V-242467",
+  "previousName": "",
+  "title": "The Kubernetes PKI keys must have file permissions set to 600 or more restrictive. (V-242467) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242467r712757_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        mapfile -t my_array < <( find pki_path -name \"*.key\" | xargs stat -c '%n %a' | awk '{print $2}' )\n\n        for perm in \"${my_array[@]}\"\n        do\n                if [[ $perm -gt 600 ]]\n                then\n                        echo \"Key file within pki_path has incorrect permissions. Check failed.\"\n                        exit 1\n                fi\n        done\n\n        echo \"All key files within pki_path have correct permissions. Check passed.\"\n        exit 0\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
