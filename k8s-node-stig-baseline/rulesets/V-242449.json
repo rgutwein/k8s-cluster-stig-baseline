@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9073,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003160 V-242449",
+  "previousName": "",
+  "title": "The Kubernetes Kubelet certificate authority file must have file permissions set to 644 or more restrictive. (V-242449) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242449r712703_rule)",
+  "script": "#!/bin/bash\n\nprocessCheck()\n{\n        kubeletCA=$(ps -ef | grep kubelet | grep -w -- --client-ca-file | cut -d '=' -f 5 | awk '{print $1}')\n\n        if [[ -z $kubeletCA ]]\n        then\n                echo \"Kubelet is not running on target. Check failed.\"\n                exit 1\n        elif [[ ! -f $kubeletCA ]]\n        then\n                echo \"Kubelet CA file is not defined. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        processCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        permConf=$(stat -c %a $kubeletCA)\n\n        if [[ $permConf -gt 644 ]]\n        then\n                echo \"Kubelet CA file has incorrect permissions. Check failed.\"\n                exit 1\n        else\n                echo \"Kubelet CA file has correct permissions. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
