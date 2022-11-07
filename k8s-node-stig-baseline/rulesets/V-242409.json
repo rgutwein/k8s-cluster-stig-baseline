@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9033,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000910 V-242409",
+  "previousName": "",
+  "title": "Kubernetes Controller Manager must disable profiling. (V-242409) (NIST 800-53: CM-7) (CCI: CCI-000381) (Rule ID: SV-242409r712583_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep -i controller-manager)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Controller Manager manifest file was not found. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        profileConfManifest=$(grep -i profiling manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $profileConfManifest ]]\n        then\n                echo \"profiling is not set in the Kubernetes Controller Manager manifest file. Check failed.\"\n                exit 1\n        elif [[ ${profileConfManifest,,} == 'true' ]]\n        then\n                echo \"profiling is set to 'true' in the Kubernetes Controller Manager manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"profiling is properly set in the Kubernetes Controller Manager manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
