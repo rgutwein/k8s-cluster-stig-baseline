@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9027,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000700 V-242403",
+  "previousName": "",
+  "title": "Kubernetes API Server must generate audit records that identify what type of event has occurred, identify the source of the event, contain the event results, identify any users, and identify any containers associated with the event. (V-242403) (NIST 800-53: AC-2(4)) (CCI: CCI-000018, CCI-000130, CCI-000131, CCI-000132, CCI-000133, CCI-000134, CCI-000135, CCI-000172, CCI-001403, CCI-001404, CCI-001487, CCI-001814, CCI-002234) (Rule ID: SV-242403r712565_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server manifest file was not found. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        audConfManifest=$(grep -i audit-policy-file manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $audConfManifest ]]\n        then\n                echo \"audit-policy-file is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"Visual Validation Required.\"\n                echo \"audit-log-path is set to: \" $audConfManifest\n                echo \"Content of policy file:\"\n                echo \"$(<$audConfManifest)\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
