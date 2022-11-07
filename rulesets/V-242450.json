@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9074,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003170 V-242450",
+  "previousName": "",
+  "title": "The Kubernetes Kubelet certificate authority must be owned by root. (V-242450) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242450r712706_rule)",
+  "script": "#!/bin/bash\n\nprocessCheck()\n{\n        kubeProxyProc=$(ps -ef | grep kube-proxy | grep -w -- --kubeconfig | awk '{ print $9 }' | cut -d '=' -f 2)\n\n        if [[ -z $kubeProxyProc ]]\n        then\n                echo \"Kube-Proxy is either not running on target or config file is not defined. Check failed.\"\n                exit 1\n        elif [[ ! -f $kubeProxyProc ]]\n        then\n                echo \"Kube-Proxy is running on target but config file is not defined. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        processCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        permConf=$(stat -c %U:%G $kubeProxyProc | grep -v root:root)\n\n        if [[ -n $permConf ]]\n        then\n                echo \"Kube-Proxy kubeconfig file has non-root owner. Check failed.\"\n                exit 1\n        else\n                echo \"Kube-Proxy kubeconfig has correct owner 'root'. Check passed.\"\n                exit 0\n        fi\n}\n\nif [[ -d /etc/kubernetes/manifests ]]\nthen\n        masterCheck\nelse\n        echo \"This check is for k8s Master nodes. Check will be passed.\"\n        exit 0\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
