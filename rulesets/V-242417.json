@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9041,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001360 V-242417",
+  "previousName": "",
+  "title": "Kubernetes must separate user functionality. (V-242417) (NIST 800-53: SC-2) (CCI: CCI-001082) (Rule ID: SV-242417r712607_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n       echo \"Manual Check Required.\"\n        echo \"Discussion: Separating user functionality from management functionality is a requirement for all the components within the Kubernetes Control Plane. Without the separation, users may have access to management functions that can degrade the Kubernetes architecture and the services being offered, and can offer a method to bypass testing and validation of functions before introduced into a production environment.\"\n        echo \"Check Text: On the Master node, run the command:\"\n        echo \"kubectl get pods --all-namespaces\"\n        echo \"Review the namespaces and pods that are returned. Kubernetes system namespaces are kube-node-lease, kube-public, and kube-system. If any user pods are present in the Kubernetes system namespaces, this is a finding.\"\n        exit 1\n}\n\nif [[ -d /etc/kubernetes/manifests ]]\nthen\n        masterCheck\nelse\n        echo \"This check is for k8s Master nodes. Check will be passed.\"\n        exit 0\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
