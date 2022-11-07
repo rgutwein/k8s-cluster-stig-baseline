@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9019,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000420 V-242395",
+  "previousName": "",
+  "title": "Kubernetes dashboard must not be enabled. (V-242395) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242395r712541_rule)",
+  "script": "#!/bin/bash\n\nkubectlPods=$(kubectl get pods --all-namespaces -l k8s-app=kubernetes-dashboard 2>&1)\nerrCheck=$(echo $kubectlPods | grep -i 'unable to connect')\n\nif [[ -n $errCheck ]]\nthen\n        echo \"Received Error: Unable to connect. Check failed.\"\n        exit 1\nelif [[ -z $kubectlPods ]]\nthen\n        echo \"No resources were returned. Check passed.\"\n        exit 0\nelse\n        echo \"Resources were returned. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
