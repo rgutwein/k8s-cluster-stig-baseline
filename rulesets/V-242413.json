@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9037,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000950 V-242413",
+  "previousName": "",
+  "title": "The Kubernetes etcd must enforce ports, protocols, and services (PPS) that adhere to the Ports, Protocols, and Services Management Category Assurance List (PPSM CAL). (V-242413) (NIST 800-53: CM-7) (CCI: CCI-000382) (Rule ID: SV-242413r712595_rule)",
+  "script": "#!/bin/bash\n\necho \"Manual Check Required.\"\necho \"Discussion: Kubernetes etcd PPS must be controlled and conform to the PPSM CAL. Those PPS that fall outside the PPSM CAL must be blocked. Instructions on the PPSM can be found in DoD Instruction 8551.01 Policy.\"\necho \"Check Text: Change to the /etc/kubernetes/manifests/ directory on the Kubernetes Master Node. Run the command:\"\necho \"grep kube-apiserver.manifest -I -etcd-servers *\"\necho \"Any manifest and namespace PPS configuration not in compliance with PPSM CAL is a finding. Review the information systems documentation and interview the team, gain an understanding of the etcd architecture, and determine applicable PPS. Any PPS in the system documentation not in compliance with the CAL PPSM is a finding. Any PPS not set in the system documentation is a finding.\"\nexit 1",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
