@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9012,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000340 V-242388",
+  "previousName": "",
+  "title": "The Kubernetes API server must have the insecure bind address not set. (V-242388) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242388r712520_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep apiserver)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes API server manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\naddrConf=$(grep -i insecure-bind-address manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $addrConf ]]\nthen\n        echo \"The setting 'insecure-bind-address' is not configured in the Kubernetes API server manifest file. Check passed.\"\n        exit 0\nelif [[ $addrConf == 'localhost' || $addrConf == '127.0.0.1' ]]\nthen\n        echo \"The setting 'insecure-bind-address' is set to 'localhost/127.0.0.1' in the Kubernetes API server manifest file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'insecure-bind-address' is correctly set in the Kubernetes API server manifest file. Check passed.\"\n        exit 0\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
