@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9046,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001440 V-242422",
+  "previousName": "",
+  "title": "Kubernetes API Server must have a certificate for communication. (V-242422) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242422r712622_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        tlsCertConf=$(grep -i tls-cert-file manifests_path/$configFile | cut -d '=' -f 2)\n        tlsPrivConf=$(grep -i tls-private-key-file manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $tlsPrivConf || -z $tlsCertConf ]]\n        then\n                echo \"tls-cert-file or tls-private-key-file is not set in Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"tls-cert-file and tls-private-key-file are set correctly in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
