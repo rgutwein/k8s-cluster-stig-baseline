@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9044,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001420 V-242420",
+  "previousName": "",
+  "title": "Kubernetes Kubelet must have the SSL Certificate Authority set. (V-242420) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242420r712616_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls /etc/sysconfig/ | grep -w kubelet)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        caConfManifest=$(grep -i client-ca-file /etc/sysconfig/kubelet | cut -d '=' -f 2)\n\n        if [[ -z $caConfManifest ]]\n        then\n                echo \"client-ca-file is not set in Kubernetes Kubelet config file. Check failed.\"\n                exit 1\n        else\n                echo \"client-ca-file is set correctly in the Kubernetes Kubelet config file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
