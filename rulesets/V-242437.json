@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9061,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002010 V-242437",
+  "previousName": "",
+  "title": "Kubernetes must have a pod security policy set. (V-242437) (NIST 800-53: AC-6(8)) (CCI: CCI-002233) (Rule ID: SV-242437r712667_rule)",
+  "script": "#!/bin/bash\n\npolicies_arr=( $(kubectl get podsecuritypolicy | awk '{print $1}') )\npolicies_arr=(\"${policies_arr[@]:1}\")\n\nif [[ -z \"$policies_arr\" ]]\nthen\n    echo \"No pod policies were found on target. Check failed.\"\n    exit 1\nfi\n\necho \"Array: ${policies_arr[@]}\"\n\nfor policy in \"${policies_arr[@]}\"\ndo\n    echo \"Checking policy: $policy\"\n\n    policy_columns=$(kubectl get podsecuritypolicy $policy)\n\n    echo \"Policy Columns:\"\n    echo \"$policy_columns\"\n\n    if [ $(echo $policy_columns | grep -c RUNASUSER) -eq 0 ] || [ $(echo $policy_columns | grep -c FSGROUP) -eq 0 ] || [ $(echo $policy_columns | grep -c SUPPLEMENTALGROUPS) -eq 0 ]\n    then\n        echo \"A pod policy does not have one of the required columns - RUNASUSER, FSGROUP, or SUPPLEMENTALGROUPS. Check failed.\"\n        exit 1\n    else\n        for i in {1..99}\n        do\n            find=$(echo \"$policy_columns\" | awk '{print $i}')\n            if [ $(echo $find | grep -c RUNASUSER) -ge 1 ]\n            then\n                if [ $(echo $find | grep -c MustRunAsNonRoot) -eq 0 ]\n                then\n                    echo \"The policy setting RUNASUSER does not have the value MustRunAsNonRoot. Check failed.\"\n                    exit 1\n                fi\n            elif [ -z \"$find\" ]\n            then\n                break\n            fi\n        done\n    fi\ndone\n\necho \"Target has Pod Policies set and they contain the needed settings and values. Check passed.\"\nexit 0",
+  "severity": "high",
+  "owner": "admin"
+}
+]
