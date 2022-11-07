@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9070,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003130 V-242446",
+  "previousName": "",
+  "title": "The Kubernetes conf files must be owned by root. (V-242446) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242446r712694_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        echo \"k8s Component - Kubernetes Master\"\n        fileCheckAdminConf=$(stat -c %U:%G /etc/kubernetes/admin.conf | grep -v root:root)\n\t    fileCheckSchedulerConf=$(stat -c %U:%G /etc/kubernetes/scheduler.conf | grep -v root:root)\n\t    fileCheckControllerManagerConf=$(stat -c %U:%G /etc/kubernetes/controller-manager.conf | grep -v root:root)\n\n        if [[ -z $fileCheckAdminConf && -z $fileCheckSchedulerConf && -z $fileCheckControllerManagerConf ]]\n        then\n                echo \"All Kubernetes configuration files within /etc/kubernetes/ are owned by root. Check passed.\"\n                exit 0\n        else\n                echo \"Some Kunernetes configuration files within /etc/kubernetes/ are owned by non-root users. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
