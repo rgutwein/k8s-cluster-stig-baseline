@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9006,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000270 V-242382",
+  "previousName": "",
+  "title": "The Kubernetes API Server must enable Node,RBAC as the authorization mode. (V-242382) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242382r712502_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep apiserver)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes API Server manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\nauthConf=$(grep -i authorization-mode manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $authConf ]]\nthen\n        echo \"The setting 'authorization-mode' is not configured in the Kubernetes API Server manifest file. Check failed.\"\n        exit 1\nelif [[ ${authConf,,} == 'node,rbac' ]]\nthen\n        echo \"The setting 'authorization-mode' is set to 'Node,RBAC' in the Kubernetes API Server manifest file. Check passed.\"\n        exit 0\nelse\n        echo \"The setting 'authorization-mode' is incorrectly set in the Kubernetes API Server manifest file. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
