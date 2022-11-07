@@ -1,0 +1,4 @@
+kubectl_minversion:
+  description: 'Minimum kubectl version allowed'
+  type: string
+  value: '1.25'
