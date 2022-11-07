@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9060,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002000 V-242436",
+  "previousName": "",
+  "title": "The Kubernetes API server must have the ValidatingAdmissionWebhook enabled. (V-242436) (NIST 800-53: AC-6(8)) (CCI: CCI-002233) (Rule ID: SV-242436r712664_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        webhookConf=$(grep -i enable-admission-plugins manifests_path/$configFile | grep -i ValidatingAdmissionWebhook)\n\n        if [[ -z $webhookConf ]]\n        then\n                echo \"enable-admission-plugins does not contain ValidatingAdmissionWebhook in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"enable-admission-plugins does contain ValidatingAdmissionWebhook in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "high",
+  "owner": "admin"
+}
+]
