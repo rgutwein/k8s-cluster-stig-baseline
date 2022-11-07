@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9067,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002720 V-242443",
+  "previousName": "",
+  "title": "Kubernetes must contain the latest updates as authorized by IAVMs, CTOs, DTMs, and STIGs. (V-242443) (NIST 800-53: SI-2) (CCI: CCI-002605) (Rule ID: SV-242443r712685_rule)",
+  "script": "#!/bin/bash\n\nkubectlVer=$(kubectl version --short | cut -d ',' -f 3 | tr -d 'Client Version: v' | xargs | awk -F'-' '{print $1}')\n\nif [[ $kubectlVer -ge kubectl_minversion ]]\nthen\n        echo \"kubectl version is equal to or greater then kubectl_minversion. Check passed.\"\n        exit 0\nelse\n        echo \"kubectl version is less then kubectl_minversion. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
