@@ -1,0 +1,35 @@
+# List of inputs for K8s node targets.
+manifests_path:
+  description: 'Path to Kubernetes manifest files on the target node'
+  type: string
+  value: '/etc/kubernetes/manifests'
+
+pki_path:
+  description: 'Path to Kubernetes PKI files on the target node'
+  type: string
+  value: '/etc/kubernetes/pki'
+
+kubectl_minversion:
+  description: 'Minimum version of the kubectl binary on the target node'
+  type: string
+  value: '1.12.9'
+
+kubernetes_conf_admin_file:
+  description: 'Path to Kubernetes admin conf file on the target node'
+  type: string
+  value: '/etc/kubernetes/admin.conf'
+  
+kubernetes_conf_scheduler_file:
+  description: 'Path to Kubernetes scheduler conf file on the target node'
+  type: string
+  value: '/etc/kubernetes/scheduler.conf'
+
+kubernetes_conf_controller_manager_file:
+  description: 'Path to Kubernetes controller manager conf file on the target node'
+  type: string
+  value: '/etc/kubernetes/controller-manager.conf'
+
+kubelet_file:
+  description: 'kubelet file and path on node'
+  type: string
+  value: '/etc/sysconfig/kubelet'
