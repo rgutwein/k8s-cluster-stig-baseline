@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9011,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000330 V-242387",
+  "previousName": "",
+  "title": "The Kubernetes Kubelet must have the read-only port flag disabled. (V-242387) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242387r717013_rule)",
+  "script": "#!/bin/bash\n\nconfigFile=$(ps -ef | grep kubelet | grep config | awk '{ print $11 }' | cut -d '=' -f 2)\n\nif [[ -z $configFile ]]\nthen\n        echo \"Kubernetes Kubelet configuration file was not found in ps -ef. Check failed.\"\n        exit 1\nfi\n\nportConf=$(grep -i readOnlyPort $configFile | cut -d ':' -f 2 | xargs)\n\nif [[ -z $portConf ]]\nthen\n        echo \"The setting 'readOnlyPort' is not configured in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nelif [[ $portConf == '0' ]]\nthen\n        echo \"The setting 'readOnlyPort' is set to '0' in the Kubernetes Kubelet configuration file. Check passed.\"\n        exit 0\nelse\n        echo \"The setting 'readOnlyPort' is incorrectly set in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
