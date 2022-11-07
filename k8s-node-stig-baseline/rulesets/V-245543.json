@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9064,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002630 V-245543",
+  "previousName": "",
+  "title": "Kubernetes API Server must disable token authentication to protect information in transit. (V-242440) (CCI: CCI-002418) (Rule ID: SV-245543r754894_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        authConf=$(grep -i token-auth-file manifests_path/$configFile)\n\n        if [[ -z $authConf ]]\n        then\n                echo \"token-auth-file is not set in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        else\n                echo \"token-auth-file is set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
