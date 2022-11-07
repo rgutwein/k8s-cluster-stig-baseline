@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9045,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001430 V-242421",
+  "previousName": "",
+  "title": "Kubernetes Controller Manager must have the SSL Certificate Authority set. (V-242421) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242421r717033_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep controller-manager)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Controller Manager manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        caConfManifest=$(grep -i root-ca-file manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $caConfManifest ]]\n        then\n                echo \"root-ca-file is not set in Kubernetes Controller Manager manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"root-ca-file is set correctly in the Kubernetes Controller Manager manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
