@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9017,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000400 V-242393",
+  "previousName": "",
+  "title": "Kubernetes Worker Nodes must not have sshd service running. (V-242393) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242393r717015_rule)",
+  "script": "#!/bin/bash\n\nworkerCheck ()\n{\n        srvStatus=$(systemctl status sshd | grep -i active | grep running)\n\n        if [[ -n $srvStatus ]]\n        then\n                echo \"Service 'sshd' is active (running) on this worker node. Check failed.\"\n                exit 1\n        else\n                echo \"Service 'sshd' is not active (running) on this worker node. Check passed.\"\n                exit 0\n        fi\n}\n\nif [[ -d manifests_path ]]\nthen\n        echo \"This check is for k8s Worker nodes. Check will be passed.\"\n        exit 0\nelse\n        workerCheck\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
