@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9003,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000180 V-242379",
+  "previousName": "",
+  "title": "The Kubernetes etcd must use TLS to protect the confidentiality of sensitive data during electronic dissemination. (V-242379) (NIST 800-53: AC-17(2)) (CCI: CCI-000068) (Rule ID: SV-242379r712493_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep etcd)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes etcd manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\ntlsConf=$(grep -i auto-tls manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $tlsConf ]]\nthen\n        echo \"The setting 'auto-tls' is not configured in the Kubernetes etcd manifest file. Check failed.\"\n        exit 1\nelif [[ ${tlsConf,,} == 'true' ]]\nthen\n        echo \"The setting 'auto-tls' is set to 'true' in the Kubernetes etcd manifest file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'auto-tls' is properly set in the Kubernetes etcd manifest file. Check passed.\"\n        exit 0\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
