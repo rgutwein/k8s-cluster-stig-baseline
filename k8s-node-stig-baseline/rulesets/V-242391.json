@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9015,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000370 V-242391",
+  "previousName": "",
+  "title": "The Kubernetes Kubelet must have anonymous authentication disabled. (V-242391) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242391r712529_rule)",
+  "script": "#!/bin/bash\n\nconfigFile=$(ls /etc/sysconfig/ | grep kubelet)\n\nif [[ -z $configFile ]]\nthen\n        echo \"Kubernetes Kubelet configuration file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\nfi\n\nauthConf=$(grep -i anonymous-auth /etc/sysconfig/$configFile | cut -d '=' -f 2)\n\nif [[ -z $authConf ]]\nthen\n        echo \"The setting 'anonymous-auth' is not configured in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nelif [[ ${authConf,,} == 'true' ]]\nthen\n        echo \"The setting 'anonymous-auth' is set to 'true' in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'anonymous-auth' is correctly set in the Kubernetes Kubelet configuration file. Check passed.\"\n        exit 0\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
