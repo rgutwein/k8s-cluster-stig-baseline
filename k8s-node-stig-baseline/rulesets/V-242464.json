@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9088,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003310 V-242464",
+  "previousName": "",
+  "title": "The Kubernetes API Server audit log retention must be set. (V-242464) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242464r712748_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        audConf=$(grep -i audit-log-maxage manifests_path/$configFile | cut -d '=' -f 2)\n        if [[ -z $audConf ]]\n        then\n                echo \"audit-log-maxage is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        elif [[ $audConf -lt 30 ]]\n        then\n                echo \"audit-log-maxage is set to less than '30'. Check failed.\"\n                exit 1\n        else\n                echo \"audit-log-maxage is set correctly in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
