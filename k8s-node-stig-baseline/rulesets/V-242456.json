@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9080,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003230 V-242456",
+  "previousName": "",
+  "title": "The Kubernetes kubelet config must have file permissions set to 644 or more restrictive. (V-242456) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242456r712724_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        if [[ ! -f /var/lib/kubelet/config.yaml ]]\n        then\n                echo \"/kubelet/config.yaml does not exist on target. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        permConf=$(stat -c %a /var/lib/kubelet/config.yaml)\n\n        if [[ $permConf -gt 644 ]]\n        then\n                echo \"/kubelet/config.yaml has incorrect permissions. Check failed.\"\n                exit 1\n        else\n                echo \"/kubelet/config.yaml has proper permissions. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
