@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9032,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000900 V-242408",
+  "previousName": "",
+  "title": "The Kubernetes manifests must have least privileges. (V-242408) (NIST 800-53: CM-5(6)) (CCI: CCI-001499) (Rule ID: SV-242408r712580_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        for file in manifests_path*\n        do\n                perNum=$(stat -c '%a' $file)\n\n                if [[ $perNum -gt 644 ]]\n                then\n                        echo \"Manifest File - $file is too permissive - $perNum. Check failed.\"\n                        exit 1\n                fi\n        done\n\n        echo \"All manifest files have proper permissions. Check passed.\"\n        exit 0\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
