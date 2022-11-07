@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9090,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003330 V-242466",
+  "previousName": "",
+  "title": "The Kubernetes PKI CRT must have file permissions set to 644 or more restrictive. (V-242466) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242466r712754_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        mapfile -t my_array < <( find pki_path -name \"*.crt\" | xargs stat -c '%n %a' | awk '{print $2}' )\n\n        for perm in \"${my_array[@]}\"\n        do\n                if [[ $perm -gt 644 ]]\n                then\n                        echo \"CRT file: $perm within pki_path has incorrect permissions. Check failed.\"\n                        exit 1\n                fi\n        done\n\n        echo \"All CRT files within pki_path have correct permissions. Check passed.\"\n        exit 0\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
