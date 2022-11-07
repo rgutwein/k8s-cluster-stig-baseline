@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9005,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000220 V-242381",
+  "previousName": "",
+  "title": "The Kubernetes Controller Manager must create unique service accounts for each work payload. (V-242381) (NIST 800-53: AC-2(1)) (CCI: CCI-000015) (Rule ID: SV-242381r712499_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep controller-manager)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes Controller Manager manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\ncredConf=$(grep -i use-service-account-credentials manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $credConf ]]\nthen\n        echo \"The setting 'use-service-account-credentials' is not configured in the Kubernetes Controller Manager manifest file. Check failed.\"\n        exit 1\nelif [[ ${credConf,,} == 'false' ]]\nthen\n        echo \"The setting 'use-service-account-credentials' is set to 'false' in the Kubernetes Controller Manager manifest file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'use-service-account-credentials' is properly set in the Kubernetes Controller Manager manifest file. Check passed.\"\n        exit 0\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
