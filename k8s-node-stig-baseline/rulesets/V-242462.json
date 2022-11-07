@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9086,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003290 V-242462",
+  "previousName": "",
+  "title": "The Kubernetes API Server must be set to audit log max size. (V-242462) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242462r712742_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        audConf=$(grep -i audit-log-maxsize manifests_path/$configFile | cut -d '=' -f 2)\n        if [[ -z $audConf ]]\n        then\n                echo \"audit-log-maxsize is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        elif [[ $audConf -lt 100 ]]\n        then\n                echo \"audit-log-maxsize is set to less than '100'. Check failed.\"\n                exit 1\n        else\n                echo \"audit-log-maxsize is set correctly in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
