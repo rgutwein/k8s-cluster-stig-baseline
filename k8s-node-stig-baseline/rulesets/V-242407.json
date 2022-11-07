@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9031,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000890 V-242407",
+  "previousName": "",
+  "title": "The Kubernetes kubelet configuration file permissions set to 644 or more restrictive. (V-242407) (NIST 800-53: CM-5(6)) (CCI: CCI-001499) (Rule ID: SV-242407r712577_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        for file in manifests_path*\n        do\n                perNum=$(stat -c '%a' $file)\n\n                if [[ $perNum -gt 644 ]]\n                then\n                        echo \"Manifest File - $file is too permissive - $perNum. Check failed.\"\n                        exit 1\n                fi\n        done\n\n        echo \"All manifest files have proper permissions. Check passed.\"\n        exit 0\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
