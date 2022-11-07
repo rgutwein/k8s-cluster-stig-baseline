@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9022,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000450 V-242398",
+  "previousName": "",
+  "title": "Kubernetes DynamicAuditing must not be enabled. (V-242398) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242398r717019_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        echo \"k8s Component - Kubernetes Master\"\n        audConfManifest=$(grep -i feature-gates manifests_path* | grep DynamicAuditing=true)\n        audConfKubelet=$(grep -i feature-gates kubelet_file | grep DynamicAuditing=true)\n\n        if [[ -n $audConfManifest || -n $audConfKubelet ]]\n        then\n                echo \"Feature Gates - DynamicAuditing is set to 'true'. Check failed.\"\n                exit 1\n        else\n                echo \"Feature Gates - DynamicAuditing is not set or is set to 'false'. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
