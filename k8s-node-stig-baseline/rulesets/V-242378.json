@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9002,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000170 V-242378",
+  "previousName": "",
+  "title": "The Kubernetes API Server must use TLS 1.2, at a minimum, to protect the confidentiality of sensitive data during electronic dissemination. (V-242378) (NIST 800-53: AC-17(2)) (CCI: CCI-000068) (Rule ID: SV-242378r712490_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep apiserver)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes API Server manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\ntlsConf=$(grep -i tls-min-version manifests_path$manifestFile | cut -d '=' -f 2 | tr -d 'VersionTLS')\n\nif [[ -z $tlsConf ]]\nthen\n        echo \"The setting 'tls-min-version' is not configured in the Kubernetes API Server manifest file. Check failed.\"\n        exit 1\nelif [[ $tlsConf -ge 12 ]]\nthen\n        echo \"The setting 'tls-min-version' is set to TLS12 or higher in the Kubernetes API Server manifest file. Check passed.\"\n        exit 0\nelse\n        echo \"The setting 'tls-min-version' is set to TLS 11 or lower in the Kubernetes API Server manifest file. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
