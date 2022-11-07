@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9021,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000440 V-242397",
+  "previousName": "",
+  "title": "The Kubernetes kubelet static PodPath must not enable static pods. (V-242397) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242397r712547_rule)",
+  "script": "#!/bin/bash\n\nconfigFile=$(ls /etc/sysconfig/ | grep kubelet)\n\nif [[ -z $configFile ]]\nthen\n        echo \"Kubernetes Kubelet configuration file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\nfi\n\npodConf=$(grep -i staticPodPath /etc/sysconfig/$configFile | cut -d '=' -f 2)\n\nif [[ -n $podConf ]]\nthen\n        echo \"The setting 'staticPodPath' has been configured in the Kubernetes Kubelet configuration file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'staticPodPath' has not been configured in the Kubernetes Kubelet configuration file. Check passed.\"\n        exit 0\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
