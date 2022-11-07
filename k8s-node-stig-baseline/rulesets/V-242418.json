@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9042,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001400 V-242418",
+  "previousName": "",
+  "title": "The Kubernetes API server must use approved cipher suites. (V-242418) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242418r712610_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server configuration file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        tlsConfManifest=$(grep -i tls-cipher-suites manifests_path/$configFile | grep -i TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_ECDSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_CHACHA20_POLY1305,TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384)\n\n        if [[ -z $tlsConfManifest ]]\n        then\n                echo \"tls-cipher-suites is not set correctly. Check failed.\"\n                exit 1\n        else\n                echo \"tls-cipher-suites contains the proper settings. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
