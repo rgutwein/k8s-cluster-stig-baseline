@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9039,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001160 V-242415",
+  "previousName": "",
+  "title": "Secrets in Kubernetes must not be stored as environment variables. (V-242415) (NIST800-53: IA-5(1)) (CCI: CCI-000196) (Rule ID: SV-242415r712601_rule)",
+  "script": "#!/bin/bash\n\necho \"Manual Check Required.\"\necho \"Discussion: Secrets, such as passwords, keys, tokens, and certificates should not be stored as environment variables. These environment variables are accessible inside Kubernetes by the 'Get Pod' API call, and by any system, such as CI/CD pipeline, which has access to the definition file of the container. Secrets must be mounted from files or stored within password vaults.\"\necho \"Check Text: On the Kubernetes Master node, run the following command:\"\necho \"kubectl get all -o jsonpath='{range .items[?(@..secretKeyRef)]} {.kind} {.metadata.name} {'\\n'}{end}' -A\"\necho \"If any of the values returned reference environment variables, this is a finding.\"\nexit 1",
+  "severity": "high",
+  "owner": "admin"
+}
+]
