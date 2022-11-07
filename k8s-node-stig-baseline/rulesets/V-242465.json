@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9089,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003320 V-242465",
+  "previousName": "",
+  "title": "The Kubernetes API Server audit log path must be set. (V-242465) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242465r712751_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        audConf=$(grep -i audit-log-path manifests_path/$configFile | cut -d '=' -f 2)\n        if [[ -z $audConf ]]\n        then\n                echo \"audit-log-path is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"audit-log-path is set correctly in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
