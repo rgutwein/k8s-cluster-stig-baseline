@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9065,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002640 V-245544",
+  "previousName": "",
+  "title": "Kubernetes endpoints must use approved organizational certificate and key pair to protect information in transit. (V-245544) (NIST 800-53: SC-8) (CCI: CCI-002418) (Rule ID: SV-242441r754897_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        keyConf=$(grep -i kubelet-client-key manifests_path/$configFile | cut -d '=' -f 2)\n        certConf=$(grep -i kubelet-client-certificate manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $keyConf || -z $certConf ]]\n        then\n                echo \"kubelet-client-key or kubelet-client-certificate is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"kubelet-client-key and kubelet-client-certificate is set in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
