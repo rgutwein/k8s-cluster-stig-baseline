@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9058,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001620 V-242434",
+  "previousName": "",
+  "title": "Kubernetes Kubelet must enable kernel protection. (V-242434) (NIST 800-53: SC-3) (CCI: CCI-001084) (Rule ID: SV-242434r712658_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls /etc/sysconfig/ | grep -w kubelet)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Kubelet config file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        kernelConf=$(grep -i protect-kernel-defaults /etc/sysconfig/kubelet | cut -d '=' -f 2)\n\n        if [[ -z $kernelConf ]]\n        then\n                echo \"protect-kernel-defaults is not set in Kubernetes Kubelet config file. Check failed.\"\n                exit 1\n        elif ${kernelConf,,} == 'false'\n        then\n                echo \"protect-kernel-defaults is set to 'false' in the Kubernetes Kubelet config file. Check failed.\"\n                exit 1\n        else\n                echo \"protect-kernel-defaults is set correctly in the Kubernetes Kubelet config file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "high",
+  "owner": "admin"
+}
+]
