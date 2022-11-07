@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9072,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003150 V-242448",
+  "previousName": "",
+  "title": "The Kubernetes Kube Proxy must be owned by root. (V-242448) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242448r712700_rule)",
+  "script": "#!/bin/bash\n\nprocessCheck()\n{\n        kubeProxyProc=$(ps -ef | grep kube-proxy | grep config | awk '{ print $9 }' | cut -d '=' -f 2)\n\n        if [[ -z $kubeProxyProc ]]\n        then\n                echo \"Kube-Proxy is not running on target. Check passed.\"\n                exit 0\n        elif [[ ! -f $kubeProxyProc ]]\n        then\n                echo \"Kube-Proxy is running on target but config file is not defined. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        processCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        permConf=$(stat -c %U:%G $kubeProxyProc | grep -v root:root)\n\n        if [[ -n $permConf ]]\n        then\n                echo \"Kube-Proxy config file has non-root owner. Check failed.\"\n                exit 1\n        else\n                echo \"Kube-Proxy has correct owner 'root'. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
