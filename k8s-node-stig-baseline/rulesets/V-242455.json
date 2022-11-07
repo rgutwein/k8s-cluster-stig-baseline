@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9079,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003220 V-242455",
+  "previousName": "",
+  "title": "The Kubernetes kubelet service must have file permissions set to 644 or more restrictive. (V-242455) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242455r712721_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        if [[ ! -f /etc/systemd/system/kubelet.service.d/10-kubeadm.conf ]]\n        then\n                echo \"kubeadm.conf does not exist on target. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        permConf=$(stat -c %a /etc/systemd/system/kubelet.service.d/10-kubeadm.conf)\n\n        if [[ $permConf -gt 644 ]]\n        then\n                echo \"kubeadm.conf has incorrect permissions. Check failed.\"\n                exit 1\n        else\n                echo \"kubeadm.conf has proper permissions. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
