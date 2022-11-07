@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9047,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001450 V-242423",
+  "previousName": "",
+  "title": "Kubernetes etcd must enable client authentication to secure service. (V-242423) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242423r712625_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep -i etcd)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes etcd manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        authConf=$(grep -i client-cert-auth manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $authConf ]]\n        then\n                echo \"client-cert-auth is not set in Kubernetes etcd manifest file. Check failed.\"\n                exit 1\n        elif ${authConf,,} == 'false'\n        then\n                echo \"client-cert-auth is set to 'false' in the Kubernetes etcd manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"client-cert-auth is set correctly in the Kubernetes etcd manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
