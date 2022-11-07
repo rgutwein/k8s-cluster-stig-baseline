@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9069,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003120 V-242445",
+  "previousName": "",
+  "title": "The Kubernetes component etcd must be owned by etcd. (V-242445) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242445r712691_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        echo \"k8s Component - Kubernetes Master\"\n        fileCheck=$(stat -c %U:%G /var/lib/etcd/* | grep -v etcd:etcd)\n\n        if [[ -z $fileCheck ]]\n        then\n                echo \"All files within /var/lib/etcd/ are owned by etcd. Check passed.\"\n                exit 0\n        else\n                echo \"Some files within /var/lib/etcd/ are owned by non-etcd users. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
