@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9075,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003180 V-242451",
+  "previousName": "",
+  "title": "The Kubernetes component PKI must be owned by root. (V-242451) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242451r712709_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        permConf=$(stat -c %U:%G pki_path/* | grep -v root:root)\n\n        if [[ -n $permConf ]]\n        then\n                echo \"Files within pki_path/* have non-root owner. Check failed.\"\n                exit 1\n        else\n                echo \"File within pki_path/* have correct owner 'root'. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
