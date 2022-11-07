@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9056,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001540 V-242432",
+  "previousName": "",
+  "title": "Kubernetes etcd must have peer-cert-file set for secure communication. (V-242432) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242432r712652_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep -i etcd)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes etcd manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        certConf=$(grep -i peer-cert-file manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $certConf ]]\n        then\n                echo \"peer-cert-file is not set in Kubernetes etcd manifest file. Check failed.\"\n                exit 1\n        elif [[ -s $certConf ]]\n        then\n                echo \"peer-cert-file is set correctly in the Kubernetes etcd manifest file. Check passed.\"\n                exit 0\n        else\n                echo \"peer-cert-file is not set correctly in the Kubernetes etcd manifest file. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
