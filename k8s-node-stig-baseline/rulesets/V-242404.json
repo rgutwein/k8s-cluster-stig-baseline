@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9028,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000850 V-242404",
+  "previousName": "",
+  "title": "Kubernetes Kubelet must deny hostname override. (V-242404) (NIST 800-53: CM-5(6) (CCI: CCI-001499) (Rule ID: SV-242404r712568_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls /etc/sysconfig/ | grep -w kubelet)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Kubelet file was not found. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        hostConfManifest=$(grep -i hostname-override /etc/sysconfig/kubelet)\n\n        if [[ -n $hostConfManifest ]]\n        then\n                echo \"hostname-override is set in the Kubernetes Kubelet file. Check failed.\"\n                exit 1\n        else\n                echo \"hostname-override is not set in the Kubernetes Kubelet file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
