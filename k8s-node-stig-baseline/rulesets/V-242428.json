@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9052,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001500 V-242428",
+  "previousName": "",
+  "title": "Kubernetes etcd must have a certificate for communication. (V-242428) (NIST 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242428r712640_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep -i etcd)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes etcd manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        etcdConf=$(grep -i etcd-certfile manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $etcdConf ]]\n        then\n                echo \"etcd-certfile is not set in Kubernetes etcd manifest file. Check failed.\"\n                exit 1\n        elif [[ -s $etcdConf ]]\n        then\n                echo \"etcd-certfile is set correctly in the Kubernetes etcd manifest file. Check passed.\"\n                exit 0\n        else\n                echo \"etcd-certfile is not set correctly in the Kubernetes etcd manifest file. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
