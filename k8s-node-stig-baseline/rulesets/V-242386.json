@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9010,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000320 V-242386",
+  "previousName": "",
+  "title": "The Kubernetes API server must have the insecure port flag disabled. (V-242386) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242386r712514_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep apiserver)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes API server manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\nportConf=$(grep -i insecure-port manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $portConf ]]\nthen\n        echo \"The setting 'insecure-port' is not configured in the Kubernetes API server manifest file. Check failed.\"\n        exit 1\nelif [[ $portConf == '0' ]]\nthen\n        echo \"The setting 'insecure-port' is set to '0' in the Kubernetes API server manifest file. Check passed.\"\n        exit 0\nelse\n        echo \"The setting 'insecure-port' is incorrectly set in the Kubernetes API server manifest file. Check failed.\"\n        exit 1\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
