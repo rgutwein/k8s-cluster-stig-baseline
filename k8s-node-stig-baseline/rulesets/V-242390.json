@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9014,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000360 V-242390",
+  "previousName": "",
+  "title": "The Kubernetes API server must have anonymous authentication disabled. (V-242390) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242390r712526_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep apiserver)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes API server manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\nauthConf=$(grep -i anonymous-auth manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $authConf ]]\nthen\n        echo \"The setting 'anonymous-auth' is not configured in the Kubernetes API server manifest file. Check passed.\"\n        exit 0\nelif [[ ${authConf,,} == 'true' ]]\nthen\n        echo \"The setting 'anonymous-auth' is set to 'true' in the Kubernetes API server manifest file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'anonymous-auth' is correctly set in the Kubernetes API server manifest file. Check passed.\"\n        exit 0\nfi",
+  "severity": "high",
+  "owner": "admin"
+}
+]
