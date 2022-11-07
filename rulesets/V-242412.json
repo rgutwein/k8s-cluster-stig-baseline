@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9036,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000940 V-242412",
+  "previousName": "",
+  "title": "The Kubernetes Controllers must enforce ports, protocols, and services (PPS) that adhere to the Ports, Protocols, and Services Management Category Assurance List (PPSM CAL). (V-242412) (NIST 800-53: CM-7) (CCI: CCI-000382) (Rule ID: SV-242412r712592_rule)",
+  "script": "#!/bin/bash\n\necho \"Manual Check Required.\"\necho \"Discussion: Kubernetes Controller ports, protocols, and services must be controlled and conform to the PPSM CAL. Those PPS that fall outside the PPSM CAL must be blocked. Instructions on the PPSM can be found in DoD Instruction 8551.01 Policy.\"\necho \"Check Text: Change to the /etc/kubernetes/manifests/ directory on the Kubernetes Master Node. Run the command:\"\necho \"grep kube-scheduler.manifest -I -insecure-port\"\necho \"grep kube-scheduler.manifest -I -secure-port\"\necho \"Any manifest and namespace PPS or services configuration not in compliance with PPSM CAL is a finding. Review the information systems documentation and interview the team, gain an understanding of the Controller architecture, and determine applicable PPS. Any PPS in the system documentation not in compliance with the CAL PPSM is a finding. Any PPS not set in the system documentation is a finding.\"\nexit 1",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
