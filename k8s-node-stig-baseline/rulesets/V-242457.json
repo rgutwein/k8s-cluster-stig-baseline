@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9081,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003240 V-242457",
+  "previousName": "",
+  "title": "The Kubernetes kubelet config must be owned by root. (V-242457) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242457r712727_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        if [[ ! -f /var/lib/kubelet/config.yaml ]]\n        then\n                echo \"/kubelet/config.yaml does not exist on target. Check failed.\"\n                exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        permConf=$(stat -c %U:%G /var/lib/kubelet/config.yaml | grep -v root:root)\n\n        if [[ -n $permConf ]]\n        then\n                echo \"/kubelet/config.yaml has incorrect ownership 'non-root'. Check failed.\"\n                exit 1\n        else\n                echo \"/kubelet/config.yaml has correct ownership 'root'. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
