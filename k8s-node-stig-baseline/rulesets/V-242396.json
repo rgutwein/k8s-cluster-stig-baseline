@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9020,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000430 V-242396",
+  "previousName": "",
+  "title": "Kubernetes Kubectl cp command must give expected access and results. (V-242396) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242396r712544_rule)",
+  "script": "#!/bin/bash\n\nkubectlVer=$(kubectl version --client | cut -d ',' -f 3 | tr -d 'GitVersion:\"v' | xargs | awk -F'-' '{print $1}')\n\nif [[ $kubectlVer -ge kubectl_minversion ]]\nthen\n        echo \"kubectl version is equal to or greater then kubectl_minversion. Check passed.\"\n        exit 0\nelse\n        echo \"kubectl version is less then kubectl_minversion. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
