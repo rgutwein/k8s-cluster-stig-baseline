@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9066,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-002700 V-242442",
+  "previousName": "",
+  "title": "Kubernetes must remove old components after updated versions have been installed. (V-242442) (NIST 800-53: SI-2(6)) (CCI: CCI-002617) (Rule ID: SV-242442r712682_rule)",
+  "script": "#!/bin/bash\n\nk8s_images_arr=( $(kubectl get pods --all-namespaces -o jsonpath=\\\"{..image}\\\" | tr -s '[[:space:]]' | sort | uniq -c) )\n\nuniqueEntry=$(printf '%s\\n' \"${k8s_images_arr[@]}\"|awk '!($0 in seen){seen[$0];c++} END {print c}')\n\nif [[ uniqueEntry != ${#k8s_images_arr[@]} ]]\nthen\n    echo \"Multiple versions of the same image were found, this is a finding.\"\n    exit 1\nelse\n    echo \"No duplicates found in k8s images. Check passed.\"\n    exit 0\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
