@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9083,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003260 V-242459",
+  "previousName": "",
+  "title": "The Kubernetes etcd must have file permissions set to 644 or more restrictive. (V-242459) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242459r712733_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n    for file in /var/lib/etcd/\n    do\n        if [[ ( stat -c %a $file) -gt 644 ]]\n        then\n            echo \"/var/lib/etcd/$file has incorrect permissions. Check failed.\"\n            exit 1\n        fi\n    done \n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
