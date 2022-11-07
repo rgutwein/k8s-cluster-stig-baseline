@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9000,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000150 V-242376",
+  "previousName": "",
+  "title": "The Kubernetes Controller Manager must use TLS 1.2, at a minimum, to protect the confidentiality of sensitive data during electronic dissemination. (V-242376) (NIST 800-53: AC-17(2)) (CCI: CCI-000068) (Rule ID: SV-242376r712484_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep controller-manager)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes Controller Manager manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\ntlsConf=$(grep -i tls-min-version manifests_path$manifestFile | cut -d '=' -f 2 | tr -d 'VersionTLS')\n\nif [[ -z $tlsConf ]]\nthen\n        echo \"The setting tls-min-version is not configured in the Kubernetes Controller Manager manifest file. Check failed.\"\n        exit 1\nelif [[ $tlsConf -ge 12 ]]\nthen\n        echo \"The setting tls-min-version is set to TLS12 or higher in the Kubernetes Controller Manager manifest file. Check passed.\"\n        exit 0\nelse\n        echo \"The setting tls-min-version is set to TLS 11 or lower in the Kubernetes Controller Manager manifest file. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
