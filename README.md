@@ -31,13 +31,13 @@ In order to assist in the countless variants/implementations of Kubernetes Clust
 
 During the exec stage of the project's pipeline, a script has been developed to take the root level inputs.yml file, parse the values, and apply those values to the proper variables within each applicable check. This is accomplished by utilizing SED and swaping the strings within the JSON data.
 
-### Setting Up gitlab-ci.yml
+### Setting Up github-ci.yml
 
 In order for the exec stage to execute properly, an additional variable must be defined in the exec stage portion. This variable is named INPUTS_YML and requires the value 'true' or 'false'. If true, the exec stage will execute the process listed above. If false, will skip the variable replacement and push rulesets directly to an instance. A safeguard is in place where if a user defines INPUTS_YML as true but the file inputs.yml does not exist in the project directory, the pipeline will cancel.
 
 &nbsp;
 
-#### Example gitlab-ci.yml
+#### Example github-ci.yml
 
 ```yml
 exec Kubernetes:
