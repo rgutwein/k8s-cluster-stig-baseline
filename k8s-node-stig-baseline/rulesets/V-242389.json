@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9013,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000350 V-242389",
+  "previousName": "",
+  "title": "The Kubernetes API server must have the secure port set. (V-242389) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242389r712523_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep apiserver)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes API server manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\nportConf=$(grep -i secure-port manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $portConf ]]\nthen\n        echo \"The setting 'secure-port' is not configured in the Kubernetes API server manifest file. Check failed.\"\n        exit 1\nelif [[ $portConf -ge '0' ]]\nthen\n        echo \"The setting 'secure-port' is set to '0' in the Kubernetes API server manifest file. Check failed.\"\n        exit 1\nelse\n        echo \"The setting 'secure-port' is correctly set in the Kubernetes API server manifest file. Check passed.\"\n        exit 0\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
