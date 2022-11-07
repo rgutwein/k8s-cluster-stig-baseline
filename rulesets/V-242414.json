@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9038,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000960 V-242414",
+  "previousName": "",
+  "title": "The Kubernetes cluster must use non-privileged host ports for user pods. (V-242414) (NIST 800-53: CM-7) (CCI: CCI-000382) (Rule ID: SV-242414r717030_rule)",
+  "script": "#!/bin/bash\n\necho \"Manual Check Required.\"\necho \"Discussion: Privileged ports are those ports below 1024 and that require system privileges for their use. If containers can use these ports, the container must be run as a privileged user. Kubernetes must stop containers that try to map to these ports directly. Allowing non-privileged ports to be mapped to the container-privileged port is the allowable method when a certain port is needed. An example is mapping port 8080 externally to port 80 in the container.\"\necho \"On the Master node, run the command:\"\necho \"kubectl get pods --all-namespaces\"\necho \"The list returned is all pods running within the Kubernetes cluster. For those pods running within the user namespaces (System namespaces are kube-system, kube-node-lease and kube-public), run the command:\"\necho \"kubectl get pod podname -o yaml | grep -i port\"\necho \"Review the ports that are returned for the pod. If any host-privileged ports are returned for any of the pods, this is a finding.\"\nexit 1",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
