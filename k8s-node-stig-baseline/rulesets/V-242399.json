@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9023,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000460 V-242399",
+  "previousName": "",
+  "title": "Kubernetes DynamicKubeletConfig must not be enabled. (V-242399) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242399r717021_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls /etc/sysconfig/ | grep kubelet)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes Kubelet configuration file was not found in /etc/sysconfig. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        audConfManifest=$(grep -i feature-gates manifests_path* | grep DynamicKubeletConfig=)\n        audConfKubelet=$(grep -i feature-gates /etc/sysconfig/kubelet | grep DynamicKubeletConfig=)\n\n        if [[ -z $audConfManifest || -z $audConfKubelet ]]\n        then\n                echo \"Feature Gates or DynamicKubeletConfig is not set. Check failed.\"\n                exit 1\n        elif grep -i true \"$audConfManifest\" != '' || grep -i true \"$audConfKubelet\" != ''\n        then\n                echo \"Feature Gates - DynamicKubeletConfig is set to 'true'. Check failed.\"\n                exit 1\n        else\n                echo \"Feature Gates - DynamicKubeletConfig is set correctly. Check passed.\"\n                exit 0\n        fi\n}\n\nworkerCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Worker Node\"\n        audConfKubelet=$(grep -i feature-gates /etc/sysconfig/kubelet | grep DynamicKubeletConfig=true)\n\n        if [[ -z $audConfKubelet ]]\n        then\n                echo \"Feature Gates or DynamicKubeletConfig is not set. Check failed.\"\n                exit 1\n        elif grep -i true \"$audConfKubelet\" != ''\n        then\n                echo \"Feature Gates - DynamicKubeletConfig is set to 'true'. Check failed.\"\n                exit 1\n        else\n                echo \"Feature Gates - DynamicKubeletConfig is set correctly. Check passed.\"\n                exit 0\n        fi\n}\n\nif [[ -d manifests_path ]]\nthen\n        masterCheck\nelse\n        workerCheck\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
