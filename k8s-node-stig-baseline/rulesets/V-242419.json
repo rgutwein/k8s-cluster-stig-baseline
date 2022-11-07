@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9043,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-001410 V-242419",
+  "previousName": "",
+  "title": "Kubernetes API Server must have the SSL Certificate Authority set. (V-242419) (NISt 800-53: SC-23) (CCI: CCI-001184) (Rule ID: SV-242419r712613_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        caConfManifest=$(grep -i client-ca-file manifests_path/$configFile | cut -d '=' -f 2)\n\n        if [[ -z $caConfManifest ]]\n        then\n                echo \"client-ca-file is not set in Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"client-ca-file is set correctly in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
