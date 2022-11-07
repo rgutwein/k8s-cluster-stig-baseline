@@ -1,0 +1,13 @@
+[
+{
+  "_id": 9085,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-003280 V-242461",
+  "previousName": "",
+  "title": "Kubernetes API Server audit logs must be enabled. (V-242461) (NIST 800-53: CM-6) (CCI: CCI-000366) (Rule ID: SV-242461r712739_rule)",
+  "script": "#!/bin/bash\n\nfileCheck ()\n{\n        configFile=$(ls manifests_path | grep apiserver)\n        if [[ -z $configFile ]]\n        then\n                echo \"Kubernetes API Server Manifest file was not found in manifests_path. Check failed.\"\n        exit 1\n        fi\n}\n\nmasterCheck ()\n{\n        fileCheck\n\n        echo \"k8s Component - Kubernetes Master\"\n        audConf=$(grep -i audit-policy-file manifests_path/$configFile | cut -d '=' -f 2)\n        if [[ -z $audConf ]]\n        then\n                echo \"audit-policy-file is not set in the Kubernetes API Server manifest file. Check failed.\"\n                exit 1\n        else\n                echo \"audit-policy-file is set in the Kubernetes API Server manifest file. Check passed.\"\n                exit 0\n        fi\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
+
