@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9030,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000880 V-242406",
+  "previousName": "",
+  "title": "The Kubernetes kubelet configuration file must be owned by root. (V-242406) (NIST 800-53: CM-5(6)) (CCI: CCI-001499) (Rule ID: SV-242406r712574_rule)",
+  "script": "#!/bin/bash\n\nmasterCheck ()\n{\n        for file in /etc/sysconfig/*kubelet*\n        do\n                user=$(stat -c '%U' $file)\n                group=$(stat -c '%G' $file)\n\n                if [[ \"$user\" != 'root' || \"$group\" != 'root' ]]\n                then\n                        echo \"Kubelet File - $file is not owned by 'root'. Check failed.\"\n                        exit 1\n                fi\n        done\n\n        echo \"All Kubelet files are owned by 'root'. Check passed.\"\n        exit 0\n}\n\nmasterCheck",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
