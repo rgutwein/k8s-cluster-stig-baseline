@@ -1,0 +1,12 @@
+[
+{
+  "_id": 9008,
+  "modified": "2021-04-29T19:09:22Z",
+  "name": "CNTR-K8-000300 V-242384",
+  "previousName": "",
+  "title": "The Kubernetes Scheduler must have secure binding. (V-242384) (NIST 800-53: AC-3) (CCI: CCI-000213) (Rule ID: SV-242384r712508_rule)",
+  "script": "#!/bin/bash\n\nmanifestFile=$(ls manifests_path | grep scheduler)\n\nif [[ -z $manifestFile ]]\nthen\n        echo \"Kubernetes Scheduler manifest file was not found in manifests_path. Check failed.\"\n        exit 1\nfi\n\naddrConf=$(grep -i bind-address manifests_path$manifestFile | cut -d '=' -f 2)\n\nif [[ -z $addrConf ]]\nthen\n        echo \"The setting 'bind-address' is not configured in the Kubernetes Scheduler manifest file. Check failed.\"\n        exit 1\nelif [[ $addrConf == '127.0.0.1' || $addrConf == 'localhost' ]]\nthen\n        echo \"The setting 'bind-address' is set to '127.0.0.1/localhost' in the Kubernetes Scheduler manifest file. Check passed.\"\n        exit 0\nelse\n        echo \"The setting 'bind-address' is incorrectly set in the Kubernetes Scheduler manifest file. Check failed.\"\n        exit 1\nfi",
+  "severity": "medium",
+  "owner": "admin"
+}
+]
