@@ -1,0 +1,86 @@
+# This configuration creates a VPC with a security group that allows incoming SSH, HTTP, and HTTPS traffic from any IP address, and allows all outgoing traffic. It then creates an EC2 instance and configures it to follow the DISA STIG guidelines, including setting the hostname, installing updates, installing required 
+# Create a VPC
+resource "aws_vpc" "vpc" {
+  cidr_block       = "10.0.0.0/16"
+  enable_dns_hostnames = true
+
+  tags = {
+    Name = "my-vpc"
+  }
+}
+
+# Create a security group for the VPC
+resource "aws_security_group" "sg" {
+  name        = "my-security-group"
+  description = "Security group for my VPC"
+  vpc_id      = aws_vpc.vpc.id
+
+  # Allow SSH access from any IP address
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow HTTP and HTTPS access from any IP address
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  ingress {
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow all outbound traffic
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+# Create an EC2 instance
+resource "aws_instance" "ec2" {
+  ami           = "ami-abc123"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.sg.id]
+  subnet_id     = aws_vpc.vpc.default_subnet_id
+
+  # Configure the EC2 instance to follow the DISA STIG guidelines
+  user_data = <<EOF
+#!/bin/bash
+
+# Set the hostname
+hostnamectl set-hostname my-ec2-instance
+
+# Install updates
+yum update -y
+
+# Install the required packages
+yum install -y awscli
+
+# Configure the firewall
+systemctl enable firewalld
+systemctl start firewalld
+
+# Configure SSH
+sed -i 's/#PermitRootLogin yes/PermitRootLogin no/' /etc/ssh/sshd_config
+systemctl restart sshd
+
+# Configure the time zone
+timedatectl set-timezone America/New_York
+
+# Enable automatic updates
+yum install -y yum-cron
+systemctl enable yum-cron
+systemctl start yum-cron
+EOF
+}
